@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{
+			margin:0;
+			padding:0;
+			list-style: none;
+		}
+		.container{
+			width: 320px;
+			height: 430px;
+			border:1px solid #ddd;
+			background: #fff;
+			margin:10px auto;
+			position: relative;
+		}
+		.box{
+			position:relative;
+			z-index: 9;
+		}
+		.bdy{
+			position: absolute;
+			width: 96px;
+			height: 96px;
+			left:50%;
+			top:213px;
+			border-radius: 50%;
+			margin:-48px 0 0 -48px;
+			}
+			.inner{
+				margin-top:66px;
+				text-align: center;
+			}
+			.inner span{
+				font-size: 14px;
+				color:#b4b4b4;
+				display:inline-block;
+				margin-top:5px;
+			}
+			.inner .btn{
+				width: 90%;
+				height: 45px;
+				line-height: 45px;
+				margin-top:45px;
+				background: #5677fc;
+				color:#fff;
+				border-radius: 3px;
+				display:inline-block;
+				cursor: pointer;
+				transition:background-color 0.2s;
+			}
+			.btn:hover{
+				background-color:blue;
+			}
+			.pop{
+				position: absolute;
+				left:0;
+				top:0;
+				width: 100%;
+				height: 100%;
+				text-align: center;
+			}
+			.close{
+				position:absolute;
+				right: 10px;
+				top:0;
+				color:#999;
+				font-size: 24px;
+				font-family: "微软雅黑";
+				cursor: pointer;
+			}
+			.close:hover{
+				color:#111;
+			}
+			.pop h3{
+				margin-top: 15px;
+			}
+			.pop span{
+				margin-top:20px;
+				display:block;
+				font-size: 12px;
+				color:#999;
+				margin-bottom: 30px;
+			}
+			.pop img{
+				width: 125px;
+				height: 125px;
+				display:inline-block;
+				margin:10px;
+			}
+			.container,.box,.pop,.pop img,.bdy{
+				opacity:0;
+			}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="box">
+			<img src="img/back.jpg" alt="">
+			<img src="img/head.jpg" alt="" class="bdy">
+			<div class="inner">
+				<h3>慕课网</h3>
+				<span>只学习有用的</span>
+				<div class="btn">查看课程</div>
+			</div>
+		</div>
+		<div class="pop">
+			<div class="close">&times;</div>
+			<h3>慕课网</h3>
+			<span>只学习有用的</span>
+			<img src="img/pic1.jpg" alt="">
+			<img src="img/pic2.jpg" alt="">
+			<img src="img/pic3.jpg" alt="">
+			<img src="img/pic4.jpg" alt="">
+		</div>
+	</div>
+	<script src="jquery-1.7.2.js"></script>
+	<script src="velocity.min.js"></script>
+	<script src="velocity.ui.min.js"></script>
+	<script>
+		(function($){
+			var container=$('.container');
+			var bdy=$('.bdy');
+			var box=$('.box');
+
+			$.Velocity.RegisterUI("callUp",{
+				defaultDuration:500,
+				calls:[
+					[{opacity:[1,0],translateY:[0,100]}]
+				]
+			});
+			$.Velocity.RegisterUI("call",{
+				defaultDuration:200,
+				calls:[
+					[{opacity:[0,1],translateY:[100,0]}]
+				]
+			});
+
+			$.Velocity.RegisterUI("callIn",{
+				defaultDuration:300,
+				calls:[
+					[{scale:[1,0.3],opacity:[1,0]}]
+				]
+			});
+			$.Velocity.RegisterUI("callS",{
+				defaultDuration:300,
+				calls:[
+					[{scale:[0.3,1],opacity:[0,1]}]
+				]
+			});
+			var mySequence=[{
+				elements:container,p:"callUp",options:{
+					delay:300
+				}
+			},{
+				elements:box,p:"callUp",options:{
+					sequenceQueue:false
+				}
+			},{
+				elements:bdy,p:"callUp",options:{
+					sequenceQueue:false,
+					delay:60
+				}
+			}];
+			$.Velocity.RunSequence(mySequence);
+
+
+			var mySequence1=[
+			{
+				elements:container,p:"call"
+			},
+			{
+				elements:box,p:"call",options:{
+					sequenceQueue:false
+				}
+			},{
+				elements:container,p:"callUp"
+			},
+			{
+				elements:$('.pop'),p:"callUp",options:{
+					sequenceQueue:false
+				}
+			},
+			{
+				elements:$('.pop img'),p:"callIn"
+			}
+			];
+
+			var mySequence2=[
+			{
+				elements:$('.pop img'),p:"callS"
+			},
+			{
+				elements:container,p:"call"
+			},
+			{
+				elements:$('.pop'),p:"call",options:{
+					sequenceQueue:false
+				}
+			},{
+				elements:container,p:"callUp"
+			},
+			{
+				elements:box,p:"callUp",options:{
+					sequenceQueue:false
+				}
+			}
+			];
+			$('.btn').on('click',function(){
+				$.Velocity.RunSequence(mySequence1);
+			});
+			$('.close').on('click',function(){
+				$.Velocity.RunSequence(mySequence2);
+			});
+		})(jQuery);	
+	</script>
+</body>
+</html>
